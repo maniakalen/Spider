@@ -1,20 +1,20 @@
-package org.spider;
+package org.spider.data;
 
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import java.util.List;
 import java.util.Vector;
 
 /**
- * Created by peter.georgiev on 7/11/14.
+ * Created by peter.georgiev on 17/11/14.
  */
-public class DataTableModel extends AbstractTableModel {
-    private String[] _columnNames = {"Id","Name"};
-    public Class[] m_colTypes = { Integer.class, String.class };
-    private Vector<Vector> _data;
+public abstract class AbstractDataTableModel extends AbstractTableModel implements DataManagerInterface {
+    protected String[] _columnNames = {};
+    protected Class[] m_colTypes = { Integer.class, String.class };
 
-    public DataTableModel(Vector<Vector> data) {
-        super();
-        this._data = data;
-    }
+    protected Vector<Vector> _data;
+    protected DataUpdateListener _listener;
+
     public int getColumnCount() {
         return _columnNames.length;
     }
@@ -55,4 +55,17 @@ public class DataTableModel extends AbstractTableModel {
         //_data.elementAt(row).set(col, value);
         //fireTableCellUpdated(row, col);
     }
+
+    public TableModel getTableModel() {
+        return this;
+    }
+
+    public Object work(Vector<Object> row) {
+        return true;
+    }
+    public void process(List<Object> chunks) {}
+    public void addDataUpdateListener(DataUpdateListener listener) {
+        this._listener = listener;
+    }
+
 }

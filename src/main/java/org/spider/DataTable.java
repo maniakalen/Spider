@@ -1,17 +1,19 @@
 package org.spider;
 
+import org.spider.data.AbstractDataTableModel;
+import org.spider.data.DataTableModel;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.table.AbstractTableModel;
 
 /**
  * Created by peter.georgiev on 7/11/14.
  */
 public class DataTable extends JTable {
-    protected DataTableModel _model;
-    public DataTable(DataTableModel model)
+    protected AbstractTableModel _model;
+    public DataTable(AbstractTableModel model)
     {
         super(model);
         _model = model;
