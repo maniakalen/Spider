@@ -7,10 +7,8 @@ import java.util.Vector;
 import org.config.Config;
 import org.plugins.*;
 import org.spider.data.DataTableModel;
-import org.spider.data.TableValues;
-/**
- * Created by peter.georgiev on 7/11/14.
- */
+
+
 public class UserInterface extends JFrame {
     private PluginManager _manager;
     private Config _config;
@@ -29,7 +27,7 @@ public class UserInterface extends JFrame {
         d.addElement(row);
         dtm = new DataTableModel(d);
         t = new DataTable(dtm);
-        this.getContentPane().add(t);
+        this.getContentPane().add(new JScrollPane(t));
         String file = System.getProperty("vmConfig");
         System.err.println(file);
         this._config = new Config(file);
@@ -41,9 +39,12 @@ public class UserInterface extends JFrame {
         this._manager.registerPlugins();
     }
     public void postCreate() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             TaskWorker t = new TaskWorker(this.dtm);
-            this.d.addElement(t.getVector());
+            Vector<Object> v = t.getVector();
+            v.add(0, this.dtm.getRowCount());
+            v.add(1, "http://destinia.com/viajes/");
+            this.d.addElement(v);
             t.execute();
         }
         //dtm.fireTableDataChanged();

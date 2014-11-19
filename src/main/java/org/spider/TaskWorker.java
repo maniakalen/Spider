@@ -3,20 +3,15 @@ package org.spider;
 import org.spider.data.AbstractDataTableModel;
 import org.spider.data.DataUpdateListener;
 import javax.swing.*;
-import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
-/**
- * Created by peter.georgiev on 14/11/14.
- */
+
 public class TaskWorker extends SwingWorker<Integer, Object> {
     private Vector<Object> d;
     private AbstractDataTableModel dtm;
     public TaskWorker(AbstractDataTableModel dtm) {
-        this.d = new Vector<Object>();
-        this.d.add("1");
-        this.d.add("Test");
+        this.d = new Vector<>();
         this.dtm = dtm;
 
     }
@@ -38,5 +33,8 @@ public class TaskWorker extends SwingWorker<Integer, Object> {
     protected void process(List<Object> chunks) {
         dtm.process(chunks);
         dtm.fireTableDataChanged();
+    }
+    protected void done() {
+        dtm.done();
     }
 }

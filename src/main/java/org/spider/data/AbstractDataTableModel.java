@@ -5,16 +5,19 @@ import javax.swing.table.TableModel;
 import java.util.List;
 import java.util.Vector;
 
-/**
- * Created by peter.georgiev on 17/11/14.
- */
+
 public abstract class AbstractDataTableModel extends AbstractTableModel implements DataManagerInterface {
+    static int count = 1;
+
     protected String[] _columnNames = {};
     protected Class[] m_colTypes = { Integer.class, String.class };
 
     protected Vector<Vector> _data;
     protected DataUpdateListener _listener;
 
+    public AbstractDataTableModel(Vector<Vector> data) {
+        this._data = data;
+    }
     public int getColumnCount() {
         return _columnNames.length;
     }
@@ -67,5 +70,7 @@ public abstract class AbstractDataTableModel extends AbstractTableModel implemen
     public void addDataUpdateListener(DataUpdateListener listener) {
         this._listener = listener;
     }
-
+    public void done() {
+        count--;
+    }
 }
