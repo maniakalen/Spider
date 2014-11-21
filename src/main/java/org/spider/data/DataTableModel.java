@@ -17,17 +17,16 @@ public class DataTableModel extends AbstractDataTableModel {
     public DataTableModel(Vector<Vector> data) {
         super(data);
 
-        this._columnNames = new String[]{"Id", "Url"};
-        this.m_colTypes = new Class[]{ Integer.class, String.class };
+        this._columnNames = new String[]{"Id", "Url", "Status"};
+        this.m_colTypes = new Class[]{ Integer.class, String.class, Integer.class };
     }
 
     @Override
     public Object work(Vector<Object> row) {
         try {
-            while (count > 30) {
+            while (count > 10) {
                 Thread.sleep(500);
             }
-            System.err.println(count);
             count++;
             URL url;
             if (row.elementAt(1) != null) {
@@ -41,7 +40,8 @@ public class DataTableModel extends AbstractDataTableModel {
                         new InputStreamReader(conn.getInputStream()));
                 String inputLine;
                 StringBuilder html = new StringBuilder();
-
+                row.remove(2);
+                row.add(2, conn.getResponseCode());
                 while ((inputLine = in.readLine()) != null) {
                     html.append(inputLine);
                 }
@@ -50,7 +50,10 @@ public class DataTableModel extends AbstractDataTableModel {
                 Pattern pat = Pattern.compile("(https?|http?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", Pattern.DOTALL);
                 Matcher matcher = pat.matcher(result);
                 while (matcher.find()) {
-                    _listener.dataUpdated(new URL(matcher.group()));
+                    String gr = matcher.group();
+                    if (gr.contains(DataTableModel.root)) {
+                        _listener.dataUpdated(new URL(gr));
+                    }
                 }
             }
         } catch (InterruptedException | IOException ex) {
@@ -66,6 +69,7 @@ public class DataTableModel extends AbstractDataTableModel {
             Vector<Object> v = worker.getVector();
             v.add(0, this.getRowCount());
             v.add(1, url.toString());
+            v.add(2, 0);
             this._data.addElement(v);
             worker.execute();
         }

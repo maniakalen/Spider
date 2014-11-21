@@ -7,10 +7,10 @@ import java.util.Vector;
 
 
 public abstract class AbstractDataTableModel extends AbstractTableModel implements DataManagerInterface {
-    static int count = 1;
-
-    protected String[] _columnNames = {};
-    protected Class[] m_colTypes = { Integer.class, String.class };
+    public static int count = 1;
+    public static String root;
+    protected String[] _columnNames;
+    protected Class[] m_colTypes;
 
     protected Vector<Vector> _data;
     protected DataUpdateListener _listener;

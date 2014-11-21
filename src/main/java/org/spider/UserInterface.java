@@ -1,12 +1,12 @@
 package org.spider;
 
+import org.config.Config;
+import org.plugins.PluginManager;
+import org.spider.data.DataTableModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Vector;
-
-import org.config.Config;
-import org.plugins.*;
-import org.spider.data.DataTableModel;
 
 
 public class UserInterface extends JFrame {
@@ -22,6 +22,7 @@ public class UserInterface extends JFrame {
         Vector<String> row = new Vector<>();
         row.addElement("1");
         row.addElement("Peter");
+        row.addElement("2");
         this.setJMenuBar(new JMenuBar());
         d = new Vector<>();
         d.addElement(row);
@@ -31,6 +32,8 @@ public class UserInterface extends JFrame {
         String file = System.getProperty("vmConfig");
         System.err.println(file);
         this._config = new Config(file);
+
+        DataTableModel.root = "http://destinia.com/viajes/";
         this.assignPluginManager();
     }
 
@@ -43,7 +46,8 @@ public class UserInterface extends JFrame {
             TaskWorker t = new TaskWorker(this.dtm);
             Vector<Object> v = t.getVector();
             v.add(0, this.dtm.getRowCount());
-            v.add(1, "http://destinia.com/viajes/");
+            v.add(1, DataTableModel.root);
+            v.add(2, 0);
             this.d.addElement(v);
             t.execute();
         }
