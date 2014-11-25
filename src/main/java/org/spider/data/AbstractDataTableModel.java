@@ -1,7 +1,9 @@
 package org.spider.data;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.util.List;
 import java.util.Vector;
 
@@ -11,9 +13,13 @@ public abstract class AbstractDataTableModel extends AbstractTableModel implemen
     public static String root;
     protected String[] _columnNames;
     protected Class[] m_colTypes;
-
+    protected Integer[] sizes;
     protected Vector<Vector> _data;
     protected DataUpdateListener _listener;
+
+    public AbstractDataTableModel() {
+        this._data = new Vector<Vector>();
+    }
 
     public AbstractDataTableModel(Vector<Vector> data) {
         this._data = data;
@@ -73,4 +79,7 @@ public abstract class AbstractDataTableModel extends AbstractTableModel implemen
     public void done() {
         count--;
     }
+    abstract public void start();
+    abstract public JPanel getConfigInterface();
+    abstract public Dimension getPreferredSize();
 }

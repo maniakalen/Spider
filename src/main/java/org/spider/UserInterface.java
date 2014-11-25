@@ -18,22 +18,18 @@ public class UserInterface extends JFrame {
     public UserInterface(String name) {
         super(name);
         this.setLocation(new Point(500, 250));
-        this.setPreferredSize(new Dimension(850, 430));
-        Vector<String> row = new Vector<>();
-        row.addElement("1");
-        row.addElement("Peter");
-        row.addElement("2");
+        this.setPreferredSize(new Dimension(650, 630));
         this.setJMenuBar(new JMenuBar());
-        d = new Vector<>();
-        d.addElement(row);
-        dtm = new DataTableModel(d);
+        dtm = new DataTableModel();
         t = new DataTable(dtm);
-        this.getContentPane().add(new JScrollPane(t));
+        t.setSize(dtm.getPreferredSize());
+        JPanel panel = new JPanel();
+        panel.add(new JScrollPane(t));
         String file = System.getProperty("vmConfig");
         System.err.println(file);
         this._config = new Config(file);
-
-        DataTableModel.root = "http://destinia.com/viajes/";
+        panel.add(dtm.getConfigInterface());
+        this.getContentPane().add(panel);
         this.assignPluginManager();
     }
 
@@ -42,16 +38,6 @@ public class UserInterface extends JFrame {
         this._manager.registerPlugins();
     }
     public void postCreate() {
-        for (int i = 0; i < 1; i++) {
-            TaskWorker t = new TaskWorker(this.dtm);
-            Vector<Object> v = t.getVector();
-            v.add(0, this.dtm.getRowCount());
-            v.add(1, DataTableModel.root);
-            v.add(2, 0);
-            this.d.addElement(v);
-            t.execute();
-        }
-        //dtm.fireTableDataChanged();
         this._manager.postRegisterPlugins();
     }
 }
