@@ -18,12 +18,13 @@ public class UserInterface extends JFrame {
     public UserInterface(String name) {
         super(name);
         this.setLocation(new Point(500, 250));
-        this.setPreferredSize(new Dimension(650, 630));
+        this.setPreferredSize(new Dimension(850, 630));
         this.setJMenuBar(new JMenuBar());
         dtm = new DataTableModel();
         t = new DataTable(dtm);
-        t.setSize(dtm.getPreferredSize());
+        t.setMinimumSize(dtm.getPreferredSize());
         JPanel panel = new JPanel();
+        panel.setPreferredSize(dtm.getPreferredSize());
         panel.add(new JScrollPane(t));
         String file = System.getProperty("vmConfig");
         System.err.println(file);

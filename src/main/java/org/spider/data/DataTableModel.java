@@ -23,7 +23,7 @@ public class DataTableModel extends AbstractDataTableModel {
 
         this._columnNames = new String[]{"Id", "Url", "Status"};
         this.m_colTypes = new Class[]{ Integer.class, String.class, Integer.class };
-        this.sizes = new Integer[]{45, 350, 50};
+        this.sizes = new Integer[]{45, 650, 50};
     }
     public DataTableModel() {
         this(new Vector<Vector>());
@@ -31,7 +31,7 @@ public class DataTableModel extends AbstractDataTableModel {
     @Override
     public Object work(Vector<Object> row) {
         try {
-            while (count > 10) {
+            while (count > 3) {
                 Thread.sleep(500);
             }
             count++;
@@ -72,14 +72,21 @@ public class DataTableModel extends AbstractDataTableModel {
     @Override
     public void process(List<Object> chunks) {
         for (Object url : chunks) {
-            TaskWorker worker = new TaskWorker(this);
-            System.err.println(url.toString());
-            Vector<Object> v = worker.getVector();
-            v.add(0, this.getRowCount());
-            v.add(1, url.toString());
-            v.add(2, 0);
-            this._data.addElement(v);
-            worker.execute();
+            boolean existing = false;
+            for (Vector item : this._data) {
+                if (item.get(1).toString().contains(url.toString())) {
+                    existing = true;
+                }
+            }
+            if (!existing) {
+                TaskWorker worker = new TaskWorker(this);
+                Vector<Object> v = worker.getVector();
+                v.add(0, this.getRowCount());
+                v.add(1, url.toString());
+                v.add(2, 0);
+                this._data.addElement(v);
+                worker.execute();
+            }
         }
     }
 
