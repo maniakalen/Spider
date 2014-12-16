@@ -1,8 +1,10 @@
 package org.spider.data;
 
+import org.spider.DataTable;
 import org.spider.TaskWorker;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +20,10 @@ import java.util.regex.Pattern;
 
 public class DataTableModel extends AbstractDataTableModel {
     int height = 600;
+    DataTable table;
+    JScrollPane details;
+    JSplitPane splitPane;
+    RowDataTable rowTable;
     public DataTableModel(Vector<Vector> data) {
         super(data);
 
@@ -49,6 +55,8 @@ public class DataTableModel extends AbstractDataTableModel {
                 StringBuilder html = new StringBuilder();
                 row.remove(2);
                 row.add(2, conn.getResponseCode());
+                ((RowData)row).addDetailsItem("Status",conn.getResponseCode());
+                ((RowData)row).addDetailsItem("Url", conn.getURL());
                 while ((inputLine = in.readLine()) != null) {
                     html.append(inputLine);
                 }
@@ -105,15 +113,34 @@ public class DataTableModel extends AbstractDataTableModel {
 
     @Override
     public JPanel getConfigInterface() {
-        JPanel panel = new JPanel();
+        table = new DataTable(this);
+        table.setMinimumSize(this.getPreferredSize());
+
+        JScrollPane scroll = new JScrollPane(table);
+        rowTable = new RowDataTable(new RowDataTableModel(new RowData()));
+        details = new JScrollPane(rowTable);
+        //Create a split pane with the two scroll panes in it.
+        this.splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+                scroll, details);
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setDividerLocation(200);
+
+        Dimension minimumSize = new Dimension(350, 100);
+        scroll.setMinimumSize(minimumSize);
+        details.setMinimumSize(minimumSize);
+
+        JPanel panel = new JPanel(new BorderLayout());
         final JTextField field = new JTextField();
         Dimension dim = new Dimension(300, 25);
+        JPanel control = new JPanel();
         field.setSize(dim);
         field.setPreferredSize(dim);
-        panel.add(field);
+        control.add(field);
         JButton start = new JButton("Start");
         start.addActionListener(new StartListener(field, this));
-        panel.add(start);
+        control.add(start);
+        panel.add(splitPane, BorderLayout.CENTER);
+        panel.add(control, BorderLayout.SOUTH);
         return panel;
     }
     static class StartListener implements ActionListener {
@@ -136,5 +163,12 @@ public class DataTableModel extends AbstractDataTableModel {
             width += i;
         }
         return new Dimension(width, this.height);
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent event) {
+        int last = event.getLastIndex();
+        RowData row = (RowData)this._data.get(last);
+        rowTable.setModel(new RowDataTableModel(row));
     }
 }

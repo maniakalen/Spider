@@ -2,6 +2,8 @@ package org.spider;
 
 import org.spider.data.AbstractDataTableModel;
 import org.spider.data.DataUpdateListener;
+import org.spider.data.RowData;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.Vector;
@@ -11,7 +13,7 @@ public class TaskWorker extends SwingWorker<Integer, Object> {
     private Vector<Object> d;
     private AbstractDataTableModel dtm;
     public TaskWorker(AbstractDataTableModel dtm) {
-        this.d = new Vector<>();
+        this.d = new RowData<>();
         this.dtm = dtm;
 
     }

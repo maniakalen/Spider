@@ -1,16 +1,14 @@
 package org.spider.data;
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import java.awt.*;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
-
-public abstract class AbstractDataTableModel extends AbstractTableModel implements DataManagerInterface, ListSelectionListener {
+/**
+ * Created by peter.georgiev on 15/12/14.
+ */
+public class RowDataTableModel extends AbstractTableModel {
     public static int count = 1;
     public static String root;
     protected String[] _columnNames;
@@ -19,12 +17,25 @@ public abstract class AbstractDataTableModel extends AbstractTableModel implemen
     protected Vector<Vector> _data;
     protected DataUpdateListener _listener;
 
-    public AbstractDataTableModel() {
-        this._data = new Vector<Vector>();
-    }
 
-    public AbstractDataTableModel(Vector<Vector> data) {
-        this._data = data;
+    public RowDataTableModel(RowData data)
+    {
+        Vector<Vector> results = new Vector<>();
+        Vector<String> row;
+        Iterator it = data.getDetails().entrySet().iterator();
+        while (it.hasNext()) {
+            row = new Vector<>();
+            Map.Entry pairs = (Map.Entry)it.next();
+            row.add(pairs.getKey().toString());
+            row.add(pairs.getValue().toString());
+            it.remove(); // avoids a ConcurrentModificationException
+            results.add(row);
+        }
+
+        this._data = results;
+
+        this._columnNames = new String[]{"Element", "Value"};
+        this.m_colTypes = new Class[]{ String.class, String.class };
     }
     public int getColumnCount() {
         return _columnNames.length;
@@ -65,28 +76,5 @@ public abstract class AbstractDataTableModel extends AbstractTableModel implemen
     public void setValueAt(Object value, int row, int col) {
         //_data.elementAt(row).set(col, value);
         //fireTableCellUpdated(row, col);
-    }
-
-    public TableModel getTableModel() {
-        return this;
-    }
-
-    public Object work(Vector<Object> row) {
-        return true;
-    }
-    public void process(List<Object> chunks) {}
-    public void addDataUpdateListener(DataUpdateListener listener) {
-        this._listener = listener;
-    }
-    public void done() {
-        count--;
-    }
-    abstract public void start();
-    abstract public JPanel getConfigInterface();
-    abstract public Dimension getPreferredSize();
-
-    @Override
-    public void valueChanged(ListSelectionEvent event) {
-        System.err.println("Something happened");
     }
 }

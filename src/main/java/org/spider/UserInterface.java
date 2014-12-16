@@ -21,16 +21,9 @@ public class UserInterface extends JFrame {
         this.setPreferredSize(new Dimension(850, 630));
         this.setJMenuBar(new JMenuBar());
         dtm = new DataTableModel();
-        t = new DataTable(dtm);
-        t.setMinimumSize(dtm.getPreferredSize());
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(dtm.getPreferredSize());
-        panel.add(new JScrollPane(t));
         String file = System.getProperty("vmConfig");
-        System.err.println(file);
         this._config = new Config(file);
-        panel.add(dtm.getConfigInterface());
-        this.getContentPane().add(panel);
+        this.getContentPane().add(dtm.getConfigInterface());
         this.assignPluginManager();
     }
 
